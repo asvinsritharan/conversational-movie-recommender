@@ -1,0 +1,10 @@
+data/
+*.jsonl
+*.parquet
+*.npz
+
+.venv/
+__pycache__/
+*.pyc
+
+.DS_Store

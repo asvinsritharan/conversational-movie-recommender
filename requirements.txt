@@ -1,0 +1,41 @@
+# --- Apple Silicon LLM stack (no CUDA) ---
+mlx>=0.20
+mlx-lm>=0.20            # LoRA/QLoRA fine-tune, fuse, server, convert
+# vllm-metal            # optional: install via its script if you want the "vLLM" bullet
+
+# --- Retrieval ---
+sentence-transformers>=3.0   # bge-small embeddings on MPS
+faiss-cpu>=1.8               # arm64 wheels on PyPI; use conda-forge if pip fails
+bm25s>=0.2                   # fast pure-python BM25 for hybrid search
+
+# --- Data spine ---
+duckdb>=1.1
+dbt-duckdb>=1.8
+pyspark>=3.5                 # local mode, over a sampled slice (needs JDK 17)
+pandas>=2.2
+pyarrow>=16
+
+# --- Baseline recommender ---
+implicit>=0.7               # ALS
+lightgbm>=4.3               # ranker
+scikit-learn>=1.5
+
+# --- Eval ---
+ragas>=0.2
+openai>=1.40                # OpenAI-compatible client for the local server + judge
+huggingface_hub>=0.24        # download the dataset category files
+
+# --- Platform / MLOps ---
+mlflow>=2.16
+feast>=0.40
+evidently>=0.4
+prefect>=3.0                # lighter than Airflow on 16 GB
+
+# --- Causal / experimentation ---
+# econml pulls numba/llvmlite transitively (via `sparse`). Pin modern floors so
+# the resolver uses the prebuilt py3.12 arm64 wheels instead of trying to compile
+# llvmlite 0.36 (which only supports Python <3.10 -> the build error you saw).
+llvmlite>=0.44
+numba>=0.60
+econml>=0.15
+dowhy>=0.11
