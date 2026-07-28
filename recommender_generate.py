@@ -9,23 +9,24 @@ N_ITEMS = 2000
 REVIEWS_PER_ITEM = 6
 MODEL = "mlx-community/Meta-Llama-3.1-8B-Instruct-4bit"
 
-SYSTEM = ("You are a movie/tv show expert that has watched every single movie and tv show in the planet with full understanding."
-          "In 2-3 sentences, explain why someone might like the "
-          "movie or tv show, using ONLY the reviews provided. Do not invent details.")
+SYSTEM = ("You write short movie and TV recommendations based strictly on provided reviews. "
+          "You only know what the reviews tell you. In 1-3 sentences, explain why someone "
+          "might like the title, using ONLY the reviews. If the reviews are thin, write less "
+          "rather than inventing detail.")
 
-REVIEWER_PROMPT = """
-You are a reviewer that writes small blurbs of movie and tv show recommendations.
+REVIEWER_PROMPT = """You write short recommendation blurbs for movies and TV shows.
 
-Here are real reviews of "{title}". Write 2-3 sentences explaining why somebody might enjoy
-this movie. Base the sentences solely on what the reviews say about the movie/tv show.
+Below are real reviews of "{title}". Write 1-3 sentences on why someone might enjoy it,
+based solely on what the reviews say about the title itself.
 
-YOU MUST FOCUS ON THE MOVIE/TV SHOW. Look at the story, acting, tone, themes, what viewers enjoyed about the movie/tv show.
-YOU WILL IGNORE ANYTHING THAT DOES NOT RELATE TO THE MOVIE ITSELF. That is, if the review mentions anything about shipping, DVD/Blu-ray quality, the reviewer's personal life, where they bought or rented it, or their collection. IGNORE THAT PART OF THE REVIEW.
-DO NOT MENTION "Reviewers" or "Reviews". This is to be written as a DIRECT recommendation
-YOU UNDER NO CIRCUMSTANCES ARE ALLOWS TO INVENT FACTS. ALL FACTS MUST BE TRUE FACTS FROM THE REVIEWS.
+1. Focus on the title: story, acting, tone, themes, what viewers enjoyed.
+2. Ignore anything not about the title: shipping, disc quality, the reviewer's life, where they bought or rented it, their collection.
+3. Write it as a direct recommendation. Do not mention "reviews" or "reviewers".
+4. Use only facts supported by the reviews. If the reviews don't support a claim, leave it out.
+5. Fewer, well-grounded sentences beat padding with invented detail.
 
-Here are the reviews: {context}
-"""
+Reviews:
+{context}"""
 
 inter = pd.read_parquet("data/interactions.parquet")
 top_items = inter["item_id"].value_counts().head(N_ITEMS).index.tolist()
@@ -48,7 +49,7 @@ reviews = {}
 for item_id, text in rows:
     reviews.setdefault(item_id, []).append(text.strip().replace("\n", " "))
 items = [(i, r) for i, r in reviews.items() if len(r) >= 2]
-print(f"[teacher] generating targets for {len(items):,} items")
+print(f"[recommender] generating targets for {len(items):,} items")
 
 model, tok = load(MODEL)
 
