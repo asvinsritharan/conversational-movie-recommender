@@ -8,7 +8,7 @@ fine_tune_type: lora
 
 
 num_layers: 8 
-batch_size: 1
+batch_size: 2
 max_seq_length: 512
 iters: 600
 learning_rate: 1.0e-4
