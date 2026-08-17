@@ -8,15 +8,14 @@ sampler = make_sampler(temp=0.4)
 logits_processors = make_logits_processors(repetition_penalty=1.15)
 
 SERVICE = "http://127.0.0.1:8000/search"
-SYSTEM = ("You write short movie and TV recommendations based strictly on provided reviews. "
-          "You only know what the reviews tell you. In 1-3 sentences, explain why someone "
-          "might like the title, using ONLY the reviews. If the reviews are thin, write less "
-          "rather than inventing detail.")
+SYSTEM = ("You are a movie/tv show expert that has watched every single movie and tv show in the planet with full understanding."
+          "In 2-3 sentences, explain why someone might like the "
+          "movie or tv show, using ONLY the reviews provided. Do not invent details.")
 
 print("loading explainer (MLX)...")
 model, tok = load("mlx-community/Llama-3.2-3B-Instruct-4bit", adapter_path="adapters/explainer_8L_r8")
 
-# review store into memory once (DuckDB used only at startup, then closed)
+
 rows = duckdb.sql("SELECT item_id, reviews FROM 'data/review_store.parquet'").fetchall()
 store = {i: rv for i, rv in rows}
 print(f"loaded reviews for {len(store):,} items")
@@ -35,7 +34,7 @@ while True:
     query = input("\n> ").strip()
     if query.lower() in ("quit", "exit", ""):
         break
-    # ask the retrieval service (separate process) for item_ids
+
     resp = requests.post(SERVICE, json={"query": query, "k": 3}).json()
     for hit in resp["results"]:
         title = hit["title"]
