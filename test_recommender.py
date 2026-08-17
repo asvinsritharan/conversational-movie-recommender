@@ -22,4 +22,4 @@ def run(adapter):
 print("=== BASE MODEL (no adapter) ===")
 print(run(None), "\n")
 print("=== FINE-TUNED (your adapter) ===")
-print(run("adapters/explainer"))
+print(run("adapters/explainer_8L_r8"))

@@ -3,7 +3,7 @@ train: true
 data: "data/finetune"
 
 
-adapter_path: "adapters/explainer"
+adapter_path: "adapters/explainer_8L_r8"
 fine_tune_type: lora
 
 
