@@ -38,6 +38,16 @@ class HybridRetriever:
         return [{"item_id": i, "title": self.title.get(i, "?"),
                  "text": self.text.get(i, "")} for i in fused]
 
+    def search_dense(self, query, k=TOP_K):
+        qv = self.model.encode([query], normalize_embeddings=True).astype("float32")
+        _, idx = self.index.search(qv, k)
+        return [self.ids[j] for j in idx[0] if j != -1]
+
+    def search_sparse(self, query, k=TOP_K):
+        import bm25s
+        res, _ = self.bm25.retrieve(bm25s.tokenize(query, stopwords="en"), k=k)
+        return [self.ids[j] for j in res[0]]
+
 
 if __name__ == "__main__":
     r = HybridRetriever()
