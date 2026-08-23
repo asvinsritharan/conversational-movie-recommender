@@ -1,41 +1,65 @@
-# --- Apple Silicon LLM stack (no CUDA) ---
-mlx>=0.20
-mlx-lm>=0.20            # LoRA/QLoRA fine-tune, fuse, server, convert
-# vllm-metal            # optional: install via its script if you want the "vLLM" bullet
-
-# --- Retrieval ---
-sentence-transformers>=3.0   # bge-small embeddings on MPS
-faiss-cpu>=1.8               # arm64 wheels on PyPI; use conda-forge if pip fails
-bm25s>=0.2                   # fast pure-python BM25 for hybrid search
-
-# --- Data spine ---
-duckdb>=1.1
-dbt-duckdb>=1.8
-pyspark>=3.5                 # local mode, over a sampled slice (needs JDK 17)
-pandas>=2.2
-pyarrow>=16
-
-# --- Baseline recommender ---
-implicit>=0.7               # ALS
-lightgbm>=4.3               # ranker
-scikit-learn>=1.5
-
-# --- Eval ---
-ragas>=0.2
-openai>=1.40                # OpenAI-compatible client for the local server + judge
-huggingface_hub>=0.24        # download the dataset category files
-
-# --- Platform / MLOps ---
-mlflow>=2.16
-feast>=0.40
-evidently>=0.4
-prefect>=3.0                # lighter than Airflow on 16 GB
-
-# --- Causal / experimentation ---
-# econml pulls numba/llvmlite transitively (via `sparse`). Pin modern floors so
-# the resolver uses the prebuilt py3.12 arm64 wheels instead of trying to compile
-# llvmlite 0.36 (which only supports Python <3.10 -> the build error you saw).
-llvmlite>=0.44
-numba>=0.60
-econml>=0.15
-dowhy>=0.11
+annotated-doc==0.0.4
+annotated-types==0.8.0
+anyio==4.14.1
+bm25s==0.3.9
+certifi==2026.6.17
+charset-normalizer==3.5.1
+click==8.4.2
+duckdb==1.5.4
+faiss-cpu==1.14.3
+fastapi==0.141.1
+filelock==3.29.4
+fsspec==2026.6.0
+h11==0.16.0
+hf-xet==1.5.1
+httpcore==1.0.9
+httpx==0.28.1
+huggingface-hub==1.21.0
+idna==3.18
+implicit==0.7.3
+jinja2==3.1.6
+joblib==1.5.3
+markdown-it-py==4.2.0
+markupsafe==3.0.3
+mdurl==0.1.2
+mlx==0.32.0
+mlx-lm==0.31.3
+mlx-metal==0.32.0
+mpmath==1.3.0
+narwhals==2.24.0
+networkx==3.6.1
+numpy==2.4.6
+packaging==26.2
+pandas==3.0.3
+patsy==1.0.2
+protobuf==7.35.1
+pyarrow==24.0.0
+pydantic==2.13.4
+pydantic-core==2.46.4
+pygments==2.20.0
+python-dateutil==2.9.0.post0
+pyyaml==6.0.3
+regex==2026.7.10
+requests==2.34.2
+rich==15.0.0
+safetensors==0.8.0
+scikit-learn==1.9.0
+scipy==1.17.1
+sentence-transformers==5.6.0
+sentencepiece==0.2.2
+setuptools==83.0.0
+shellingham==1.5.4
+six==1.17.0
+starlette==1.6.0
+statsmodels==0.14.6
+sympy==1.14.0
+threadpoolctl==3.6.0
+tokenizers==0.22.2
+torch==2.13.0
+tqdm==4.68.3
+transformers==5.14.1
+typer==0.25.1
+typing-extensions==4.15.0
+typing-inspection==0.4.4
+urllib3==2.7.0
+uvicorn==0.52.3
